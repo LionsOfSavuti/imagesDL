@@ -28,13 +28,40 @@ export const PartForm = ({ selectedPlant, onSaved }: { selectedPlant: string; on
       <h3 className="text-lg font-semibold">Add Spare Part</h3>
       {message && <div className={`rounded p-2 text-sm ${message.type === 'ok' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{message.text}</div>}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <input required placeholder="Part Number" className="rounded border p-2 focus:border-primary focus:outline-none" value={form.part_number} onChange={(e) => setForm({ ...form, part_number: e.target.value })} />
-        <input required placeholder="Name" className="rounded border p-2 focus:border-primary focus:outline-none" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-        <textarea placeholder="Description" className="rounded border p-2 focus:border-primary focus:outline-none md:col-span-2" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-        <select className="rounded border p-2" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>{categories.map((c) => <option key={c}>{c}</option>)}</select>
-        <input required type="number" step="0.01" placeholder="Unit Price" className="rounded border p-2" value={form.unit_price} onChange={(e) => setForm({ ...form, unit_price: Number(e.target.value) })} />
-        <input required type="number" placeholder="Reorder Point" className="rounded border p-2" value={form.reorder_point} onChange={(e) => setForm({ ...form, reorder_point: Number(e.target.value) })} />
-        <input required type="number" placeholder="Initial Quantity" className="rounded border p-2" value={form.quantity_on_hand} onChange={(e) => setForm({ ...form, quantity_on_hand: Number(e.target.value) })} />
+        <label className="space-y-1 text-sm font-medium text-slate-700">
+          <span>Part Number</span>
+          <input id="part-number" required placeholder="e.g. BRG-1001" className="w-full rounded border p-2 focus:border-primary focus:outline-none" value={form.part_number} onChange={(e) => setForm({ ...form, part_number: e.target.value })} />
+        </label>
+
+        <label className="space-y-1 text-sm font-medium text-slate-700">
+          <span>Name</span>
+          <input id="part-name" required placeholder="Bearing Assembly" className="w-full rounded border p-2 focus:border-primary focus:outline-none" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+        </label>
+
+        <label className="space-y-1 text-sm font-medium text-slate-700 md:col-span-2">
+          <span>Description</span>
+          <textarea id="part-description" placeholder="Optional description" className="w-full rounded border p-2 focus:border-primary focus:outline-none" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+        </label>
+
+        <label className="space-y-1 text-sm font-medium text-slate-700">
+          <span>Category</span>
+          <select id="part-category" className="w-full rounded border p-2" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>{categories.map((c) => <option key={c}>{c}</option>)}</select>
+        </label>
+
+        <label className="space-y-1 text-sm font-medium text-slate-700">
+          <span>Unit Price</span>
+          <input id="unit-price" required type="number" step="0.01" placeholder="0.00" className="w-full rounded border p-2" value={form.unit_price} onChange={(e) => setForm({ ...form, unit_price: Number(e.target.value) })} />
+        </label>
+
+        <label className="space-y-1 text-sm font-medium text-slate-700">
+          <span>Reorder Point</span>
+          <input id="reorder-point" required type="number" placeholder="10" className="w-full rounded border p-2" value={form.reorder_point} onChange={(e) => setForm({ ...form, reorder_point: Number(e.target.value) })} />
+        </label>
+
+        <label className="space-y-1 text-sm font-medium text-slate-700">
+          <span>Initial Quantity</span>
+          <input id="initial-quantity" required type="number" placeholder="50" className="w-full rounded border p-2" value={form.quantity_on_hand} onChange={(e) => setForm({ ...form, quantity_on_hand: Number(e.target.value) })} />
+        </label>
       </div>
       <button className="rounded bg-primary px-4 py-2 text-white">Save Part</button>
     </form>

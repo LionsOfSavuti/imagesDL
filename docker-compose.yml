@@ -28,7 +28,9 @@ services:
       PORT: 3000
 
   apache:
-    image: httpd:2.4
+    build:
+      context: ./backend
+      dockerfile: apache/Dockerfile
     container_name: spare_parts_apache
     depends_on:
       - node_api
@@ -36,7 +38,6 @@ services:
       - "8080:80"
     volumes:
       - ./dist:/usr/local/apache2/htdocs
-      - ./backend/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
 
 volumes:
   postgres_data:

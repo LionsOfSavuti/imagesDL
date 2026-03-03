@@ -46,18 +46,66 @@ npm run build
 ```bash
 docker compose up -d --build
 ```
-Services:
+Services expected:
 - `postgres` (localhost:5432)
 - `node_api` (internal, proxied by Apache)
 - `apache` (localhost:8080)
 
 Database schema + seed data are auto-applied from `supabase/schema.sql` on first boot.
 
-## 6) Open application
-- App: http://localhost:8080
-- API base (via Apache proxy): http://localhost:8080/api
+## 6) What to do immediately after `docker compose up`
+Run these checks in order:
 
-## 7) API routes
+1. Check running containers:
+```bash
+docker compose ps
+```
+You should see **three** services up: `postgres`, `node_api`, `apache`.
+
+2. If `apache` is missing, include exited containers:
+```bash
+docker compose ps -a
+```
+
+3. Inspect Apache logs:
+```bash
+docker compose logs --no-log-prefix apache
+```
+
+4. Start/rebuild Apache explicitly:
+```bash
+docker compose up -d --build apache
+```
+
+5. Verify API through Apache proxy:
+```bash
+curl http://localhost:8080/api/plants
+```
+
+6. Open app:
+- http://localhost:8080
+
+## 7) If you get `curl: (7) Failed to connect to localhost port 8080`
+This means Apache is not listening on host port 8080. Do:
+
+```bash
+docker compose ps -a
+docker compose logs apache
+```
+
+Then hard-recreate containers:
+```bash
+docker compose down
+docker compose up -d --build --force-recreate
+```
+
+If still failing, reset everything including DB volume:
+```bash
+docker compose down -v
+docker compose up -d --build
+```
+
+## 8) API routes
 - `GET /api/plants`
 - `GET|POST /api/parts`
 - `PUT|DELETE /api/parts/:id`
@@ -67,16 +115,10 @@ Database schema + seed data are auto-applied from `supabase/schema.sql` on first
 - `GET /api/kraljic`
 - `GET /api/eoq`
 
-## 8) Common operations
+## 9) Common operations
 Stop:
 ```bash
 docker compose down
-```
-
-Full reset:
-```bash
-docker compose down -v
-docker compose up -d --build
 ```
 
 After frontend changes:
@@ -92,8 +134,8 @@ docker compose logs -f node_api
 docker compose logs -f apache
 ```
 
-## 9) Optional frontend dev mode
+## 10) Optional frontend dev mode
 ```bash
 npm run dev
 ```
-Keep Docker stack running, and retain `VITE_API_BASE_URL=http://localhost:8080/api`.
+Keep Docker stack running and keep `VITE_API_BASE_URL=http://localhost:8080/api`.

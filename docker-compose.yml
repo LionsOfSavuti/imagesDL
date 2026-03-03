@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: spare_parts_postgres
+    environment:
+      POSTGRES_DB: spare_parts_db
+      POSTGRES_USER: spare_user
+      POSTGRES_PASSWORD: spare_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./supabase/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+
+  node_api:
+    build:
+      context: ./backend
+      dockerfile: node/Dockerfile
+    container_name: spare_parts_node_api
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: spare_parts_db
+      POSTGRES_USER: spare_user
+      POSTGRES_PASSWORD: spare_password
+      PORT: 3000
+
+  apache:
+    image: httpd:2.4
+    container_name: spare_parts_apache
+    depends_on:
+      - node_api
+    ports:
+      - "8080:80"
+    volumes:
+      - ./dist:/usr/local/apache2/htdocs
+      - ./backend/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+
+volumes:
+  postgres_data:

@@ -23,16 +23,16 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  getPlants: (plantId?: string) => request<Plant[]>(`/plants.php${plantId ? `?id=${plantId}` : ''}`),
-  getParts: (plantId?: string) => request<Part[]>(`/parts.php${plantId ? `?plant_id=${plantId}` : ''}`),
-  createPart: (payload: Partial<Part>) => request<{ success: boolean }>('/parts.php', { method: 'POST', body: JSON.stringify(payload) }),
-  updatePart: (id: string, payload: Partial<Part>) => request<{ success: boolean }>(`/parts.php?id=${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
-  deletePart: (id: string) => request<{ success: boolean }>(`/parts.php?id=${id}`, { method: 'DELETE' }),
-  getTransactions: (plantId?: string, days?: number) => request<Tx[]>(`/transactions.php?${new URLSearchParams({ ...(plantId ? { plant_id: plantId } : {}), ...(days ? { days: String(days) } : {}) })}`),
-  createTransaction: (payload: Record<string, unknown>) => request<{ success: boolean }>('/transactions.php', { method: 'POST', body: JSON.stringify(payload) }),
-  getAnalyticsEvents: (eventType?: string) => request<AnalyticsEvent[]>(`/analytics.php${eventType ? `?event_type=${eventType}` : ''}`),
-  createAnalyticsEvent: (payload: Partial<AnalyticsEvent>) => request<{ success: boolean }>('/analytics.php', { method: 'POST', body: JSON.stringify(payload) }),
-  getRecommendations: (plantId?: string) => request<Recommendation[]>(`/recommendations.php${plantId ? `?plant_id=${plantId}` : ''}`),
-  getKraljic: (plantId?: string) => request<Kraljic[]>(`/kraljic.php${plantId ? `?plant_id=${plantId}` : ''}`),
-  getEoq: (plantId?: string) => request<EOQ[]>(`/eoq.php${plantId ? `?plant_id=${plantId}` : ''}`)
+  getPlants: (plantId?: string) => request<Plant[]>(`/plants${plantId ? `?id=${plantId}` : ''}`),
+  getParts: (plantId?: string) => request<Part[]>(`/parts${plantId ? `?plant_id=${plantId}` : ''}`),
+  createPart: (payload: Partial<Part>) => request<{ success: boolean }>('/parts', { method: 'POST', body: JSON.stringify(payload) }),
+  updatePart: (id: string, payload: Partial<Part>) => request<{ success: boolean }>(`/parts/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
+  deletePart: (id: string) => request<{ success: boolean }>(`/parts/${id}`, { method: 'DELETE' }),
+  getTransactions: (plantId?: string, days?: number) => request<Tx[]>(`/transactions?${new URLSearchParams({ ...(plantId ? { plant_id: plantId } : {}), ...(days ? { days: String(days) } : {}) })}`),
+  createTransaction: (payload: Record<string, unknown>) => request<{ success: boolean }>('/transactions', { method: 'POST', body: JSON.stringify(payload) }),
+  getAnalyticsEvents: (eventType?: string) => request<AnalyticsEvent[]>(`/analytics${eventType ? `?event_type=${eventType}` : ''}`),
+  createAnalyticsEvent: (payload: Partial<AnalyticsEvent>) => request<{ success: boolean }>('/analytics', { method: 'POST', body: JSON.stringify(payload) }),
+  getRecommendations: (plantId?: string) => request<Recommendation[]>(`/recommendations${plantId ? `?plant_id=${plantId}` : ''}`),
+  getKraljic: (plantId?: string) => request<Kraljic[]>(`/kraljic${plantId ? `?plant_id=${plantId}` : ''}`),
+  getEoq: (plantId?: string) => request<EOQ[]>(`/eoq${plantId ? `?plant_id=${plantId}` : ''}`)
 }

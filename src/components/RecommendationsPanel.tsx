@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import type { Database } from '../lib/database.types'
 
 type Row = Database['public']['Tables']['ai_recommendations']['Row']
@@ -9,12 +9,7 @@ const priorityClass = { high: 'border-red-500', medium: 'border-yellow-500', low
 export const RecommendationsPanel = ({ selectedPlant, refreshKey }: { selectedPlant: string; refreshKey: number }) => {
   const [rows, setRows] = useState<Row[]>([])
   useEffect(() => {
-    const load = async () => {
-      let query = supabase.from('ai_recommendations').select('*').order('created_at', { ascending: false })
-      if (selectedPlant) query = query.eq('plant_id', selectedPlant)
-      const { data } = await query
-      setRows(data ?? [])
-    }
+    const load = async () => setRows(await api.getRecommendations(selectedPlant || undefined))
     void load()
   }, [selectedPlant, refreshKey])
 

@@ -1,20 +1,47 @@
-# Spare Parts Inventory Management System
+# Spare Parts Inventory Management System (Local PostgreSQL + Apache)
 
-React + TypeScript + Vite + Tailwind frontend with Supabase backend for multi-plant spare parts tracking.
+This project runs fully local without Bolt/Supabase:
+- Frontend: React + TypeScript + Vite + Tailwind
+- API server: Apache + PHP
+- Database: PostgreSQL
 
-## Setup
+## Prerequisites
+- Node.js 20+
+- Docker + Docker Compose
 
-1. Copy `.env.example` to `.env` and fill credentials.
-2. Install dependencies: `npm install`
-3. Run locally: `npm run dev`
-4. Execute `supabase/schema.sql` in your Bolt/Supabase SQL editor.
+## Local setup
+1. Install frontend dependencies:
+   ```bash
+   npm install
+   ```
+2. Create env file:
+   ```bash
+   cp .env.example .env
+   ```
+3. Build frontend:
+   ```bash
+   npm run build
+   ```
+4. Start PostgreSQL + Apache API:
+   ```bash
+   docker compose up -d --build
+   ```
+5. Open app at `http://localhost:8080`.
 
-## Features
+The database schema and sample data are auto-loaded from `supabase/schema.sql` into local PostgreSQL on first container boot.
 
-- Dashboard KPIs
-- Parts CRUD with low-stock highlighting
-- Inventory transactions with stock updates
-- Usage analytics with chart component
-- Kraljic matrix procurement analysis
-- EOQ calculations
-- AI recommendations panel
+## Development mode
+Run frontend dev server if desired:
+```bash
+npm run dev
+```
+Set `VITE_API_BASE_URL=http://localhost:8080/api`.
+
+## API endpoints
+- `/api/plants.php`
+- `/api/parts.php`
+- `/api/transactions.php`
+- `/api/analytics.php`
+- `/api/kraljic.php`
+- `/api/eoq.php`
+- `/api/recommendations.php`

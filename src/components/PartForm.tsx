@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { type FormEvent, useState } from 'react'
+import { api } from '../lib/api'
 import { trackFormSubmit } from '../lib/analytics'
 
 const categories = ['Mechanical', 'Electrical', 'Hydraulic', 'Pneumatic', 'Safety', 'Consumables']
@@ -8,18 +8,19 @@ export const PartForm = ({ selectedPlant, onSaved }: { selectedPlant: string; on
   const [form, setForm] = useState({ part_number: '', name: '', description: '', category: 'Mechanical', unit_price: 0, reorder_point: 0, quantity_on_hand: 0 })
   const [message, setMessage] = useState<{ type: 'ok' | 'err'; text: string } | null>(null)
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    const { error } = await supabase.from('spare_parts').insert({ ...form, plant_id: selectedPlant || null })
-    if (error) {
-      setMessage({ type: 'err', text: error.message })
-      await trackFormSubmit('part_form', false, error.message)
-      return
+    try {
+      await api.createPart({ ...form, plant_id: selectedPlant || null })
+      setForm({ part_number: '', name: '', description: '', category: 'Mechanical', unit_price: 0, reorder_point: 0, quantity_on_hand: 0 })
+      setMessage({ type: 'ok', text: 'Part created successfully.' })
+      await trackFormSubmit('part_form', true)
+      onSaved()
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : 'Failed to create part'
+      setMessage({ type: 'err', text: msg })
+      await trackFormSubmit('part_form', false, msg)
     }
-    setForm({ part_number: '', name: '', description: '', category: 'Mechanical', unit_price: 0, reorder_point: 0, quantity_on_hand: 0 })
-    setMessage({ type: 'ok', text: 'Part created successfully.' })
-    await trackFormSubmit('part_form', true)
-    onSaved()
   }
 
   return (

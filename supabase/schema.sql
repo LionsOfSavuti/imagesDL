@@ -110,15 +110,15 @@ alter table kraljic_analysis enable row level security;
 alter table demand_forecasts enable row level security;
 alter table maintenance_predictions enable row level security;
 
-create policy "public_access_plants" on plants for all to anon, authenticated using (true) with check (true);
-create policy "public_access_spare_parts" on spare_parts for all to anon, authenticated using (true) with check (true);
-create policy "public_access_inventory_transactions" on inventory_transactions for all to anon, authenticated using (true) with check (true);
-create policy "public_access_analytics_events" on analytics_events for all to anon, authenticated using (true) with check (true);
-create policy "public_access_ai_recommendations" on ai_recommendations for all to anon, authenticated using (true) with check (true);
-create policy "public_access_eoq_analysis" on eoq_analysis for all to anon, authenticated using (true) with check (true);
-create policy "public_access_kraljic_analysis" on kraljic_analysis for all to anon, authenticated using (true) with check (true);
-create policy "public_access_demand_forecasts" on demand_forecasts for all to anon, authenticated using (true) with check (true);
-create policy "public_access_maintenance_predictions" on maintenance_predictions for all to anon, authenticated using (true) with check (true);
+create policy "public_access_plants" on plants for all using (true) with check (true);
+create policy "public_access_spare_parts" on spare_parts for all using (true) with check (true);
+create policy "public_access_inventory_transactions" on inventory_transactions for all using (true) with check (true);
+create policy "public_access_analytics_events" on analytics_events for all using (true) with check (true);
+create policy "public_access_ai_recommendations" on ai_recommendations for all using (true) with check (true);
+create policy "public_access_eoq_analysis" on eoq_analysis for all using (true) with check (true);
+create policy "public_access_kraljic_analysis" on kraljic_analysis for all using (true) with check (true);
+create policy "public_access_demand_forecasts" on demand_forecasts for all using (true) with check (true);
+create policy "public_access_maintenance_predictions" on maintenance_predictions for all using (true) with check (true);
 
 insert into plants (name, location) values
 ('Main Manufacturing Plant', 'Detroit, MI'),

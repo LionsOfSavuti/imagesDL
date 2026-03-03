@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AlertTriangle, DollarSign, Package, TrendingDown } from 'lucide-react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 
 interface Props { selectedPlant: string; refreshKey: number }
 
@@ -11,17 +11,14 @@ export const Dashboard = ({ selectedPlant, refreshKey }: Props) => {
   useEffect(() => {
     const load = async () => {
       setLoading(true)
-      let partsQuery = supabase.from('spare_parts').select('*')
-      let txQuery = supabase.from('inventory_transactions').select('*').gte('created_at', new Date(Date.now() - 7 * 86400000).toISOString())
-      if (selectedPlant) {
-        partsQuery = partsQuery.eq('plant_id', selectedPlant)
-        txQuery = txQuery.eq('plant_id', selectedPlant)
-      }
-      const [{ data: parts }, { data: txs }] = await Promise.all([partsQuery, txQuery])
-      const totalParts = parts?.length ?? 0
-      const lowStock = (parts ?? []).filter((p) => p.quantity_on_hand <= p.reorder_point).length
-      const value = (parts ?? []).reduce((sum, p) => sum + p.quantity_on_hand * p.unit_price, 0)
-      setStats({ totalParts, lowStock, value, recentTx: txs?.length ?? 0 })
+      const [parts, txs] = await Promise.all([
+        api.getParts(selectedPlant || undefined),
+        api.getTransactions(selectedPlant || undefined, 7)
+      ])
+      const totalParts = parts.length
+      const lowStock = parts.filter((p) => p.quantity_on_hand <= p.reorder_point).length
+      const value = parts.reduce((sum, p) => sum + p.quantity_on_hand * p.unit_price, 0)
+      setStats({ totalParts, lowStock, value, recentTx: txs.length })
       setLoading(false)
     }
     void load()

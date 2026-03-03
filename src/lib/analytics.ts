@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { api } from './api'
 
 const getSessionId = (): string => {
   const key = 'inventory_session_id'
@@ -10,7 +10,7 @@ const getSessionId = (): string => {
 }
 
 export const trackEvent = async (eventType: string, eventData?: Record<string, unknown>) => {
-  await supabase.from('analytics_events').insert({
+  await api.createAnalyticsEvent({
     event_type: eventType,
     event_data: eventData ?? null,
     session_id: getSessionId()

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 import type { Database } from '../lib/database.types'
 
 type Plant = Database['public']['Tables']['plants']['Row']
@@ -14,7 +14,7 @@ export const PlantSelector = ({ selectedPlant, onChange }: Props) => {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase.from('plants').select('*').order('name')
+      const data = await api.getPlants()
       setPlants(data ?? [])
     }
     void load()

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { api } from '../lib/api'
 
 type Row = { id: string; annual_demand: number; ordering_cost: number; holding_cost_per_unit: number; part_id: string; economic_order_quantity: number; total_annual_cost: number; number_of_orders_per_year: number }
 
@@ -7,9 +7,7 @@ export const EOQAnalysis = ({ selectedPlant, refreshKey }: { selectedPlant: stri
   const [rows, setRows] = useState<Row[]>([])
   useEffect(() => {
     const load = async () => {
-      let query = supabase.from('eoq_analysis').select('*')
-      if (selectedPlant) query = query.eq('plant_id', selectedPlant)
-      const { data } = await query
+      const data = await api.getEoq(selectedPlant || undefined)
       const calculated = (data ?? []).map((r) => {
         const eoq = Math.sqrt((2 * r.annual_demand * r.ordering_cost) / Math.max(r.holding_cost_per_unit, 1))
         return { ...r, economic_order_quantity: eoq, number_of_orders_per_year: r.annual_demand / Math.max(eoq, 1) }

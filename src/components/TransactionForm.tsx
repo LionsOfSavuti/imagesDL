@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabase'
+import { type FormEvent, useEffect, useState } from 'react'
+import { api } from '../lib/api'
 import type { Database } from '../lib/database.types'
 import { trackPartTransaction } from '../lib/analytics'
 
@@ -13,22 +13,15 @@ export const TransactionForm = ({ selectedPlant, onSaved }: { selectedPlant: str
   const [notes, setNotes] = useState('')
 
   useEffect(() => {
-    const load = async () => {
-      let q = supabase.from('spare_parts').select('*')
-      if (selectedPlant) q = q.eq('plant_id', selectedPlant)
-      const { data } = await q
-      setParts(data ?? [])
-    }
+    const load = async () => setParts(await api.getParts(selectedPlant || undefined))
     void load()
   }, [selectedPlant])
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault()
     const selected = parts.find((p) => p.id === partId)
     if (!selected) return
-    const newQty = type === 'in' ? selected.quantity_on_hand + qty : type === 'out' ? selected.quantity_on_hand - qty : qty
-    await supabase.from('spare_parts').update({ quantity_on_hand: Math.max(0, newQty) }).eq('id', selected.id)
-    await supabase.from('inventory_transactions').insert({ part_id: selected.id, transaction_type: type, quantity: qty, notes, plant_id: selectedPlant || selected.plant_id })
+    await api.createTransaction({ part_id: selected.id, transaction_type: type, quantity: qty, notes, plant_id: selectedPlant || selected.plant_id })
     await trackPartTransaction(selected.id, type, qty)
     setQty(1); setNotes(''); onSaved()
   }

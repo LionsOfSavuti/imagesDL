@@ -21,17 +21,20 @@ function App() {
   useEffect(() => { void trackPageView(tab) }, [tab])
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      <header className="border-b bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-emerald-50">
+      <header className="border-b border-sky-100 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 p-4">
-          <h1 className="text-xl font-bold">Spare Parts Inventory Management</h1>
+          <div>
+            <h1 className="text-2xl font-bold text-sky-800">Spare Parts Inventory Management</h1>
+            <p className="text-sm text-slate-600">Multi-plant visibility with analytics and procurement intelligence</p>
+          </div>
           <div className="flex items-center gap-2">
             <PlantSelector selectedPlant={selectedPlant} onChange={setSelectedPlant} />
-            <button onClick={() => setRefreshKey((k) => k + 1)} className="rounded border p-2"><RefreshCw className="h-4 w-4" /></button>
+            <button onClick={() => setRefreshKey((k) => k + 1)} className="rounded border border-sky-200 bg-white p-2 text-sky-700 hover:bg-sky-50"><RefreshCw className="h-4 w-4" /></button>
           </div>
         </div>
       </header>
-      <nav className="mx-auto flex max-w-7xl gap-2 overflow-x-auto p-4">{(['Dashboard','Parts','Transactions','Analytics','Kraljic','Recommendations'] as Tab[]).map((t)=><button key={t} onClick={()=>setTab(t)} className={`rounded px-3 py-2 ${tab===t?'bg-primary text-white':'bg-white'}`}>{t}</button>)}</nav>
+      <nav className="mx-auto flex max-w-7xl gap-2 overflow-x-auto p-4">{(['Dashboard','Parts','Transactions','Analytics','Kraljic','Recommendations'] as Tab[]).map((t)=><button key={t} onClick={()=>setTab(t)} className={`rounded-full px-4 py-2 text-sm font-medium transition ${tab===t?'bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow':'bg-white text-slate-700 hover:bg-sky-50'}`}>{t}</button>)}</nav>
       <main className="mx-auto max-w-7xl space-y-4 p-4">
         {tab === 'Dashboard' && <Dashboard selectedPlant={selectedPlant} refreshKey={refreshKey} />}
         {tab === 'Parts' && <><PartForm selectedPlant={selectedPlant} onSaved={() => setRefreshKey((k) => k + 1)} /><PartsTable selectedPlant={selectedPlant} refreshKey={refreshKey} onSaved={() => setRefreshKey((k) => k + 1)} /></>}

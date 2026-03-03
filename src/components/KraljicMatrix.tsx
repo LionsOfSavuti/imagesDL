@@ -11,5 +11,5 @@ const tips = {
 }
 
 export const KraljicMatrix = ({ rows }: { rows: Kraljic[] }) => {
-  return <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{(Object.keys(quadrantColors) as Array<keyof typeof quadrantColors>).map((q) => <div key={q} className={`rounded-xl p-4 ${quadrantColors[q]}`}><h4 className="font-semibold capitalize">{q}</h4><p className="mb-2 text-xs text-slate-600">{tips[q]}</p><ul className="list-disc pl-5 text-sm">{rows.filter((r) => r.category===q).map((r) => <li key={r.id}>{r.part_id} (risk {r.supply_risk.toFixed(2)}, impact {r.profit_impact.toFixed(2)})</li>)}</ul></div>)}</div>
+  return <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{(Object.keys(quadrantColors) as Array<keyof typeof quadrantColors>).map((q) => <div key={q} className={`rounded-xl p-4 ${quadrantColors[q]}`}><h4 className="font-semibold capitalize">{q}</h4><p className="mb-2 text-xs text-slate-600">{tips[q]}</p><ul className="list-disc pl-5 text-sm">{rows.filter((r) => r.category===q).map((r) => <li key={r.id}>{r.part_id} (risk {Number(r.supply_risk).toFixed(2)}, impact {Number(r.profit_impact).toFixed(2)})</li>)}</ul></div>)}</div>
 }

@@ -1,4 +1,5 @@
 import { api } from './api'
+import type { Json } from './database.types'
 
 const getSessionId = (): string => {
   const key = 'inventory_session_id'
@@ -12,7 +13,7 @@ const getSessionId = (): string => {
 export const trackEvent = async (eventType: string, eventData?: Record<string, unknown>) => {
   await api.createAnalyticsEvent({
     event_type: eventType,
-    event_data: eventData ?? null,
+    event_data: (eventData ?? null) as Json | null,
     session_id: getSessionId()
   })
 }
